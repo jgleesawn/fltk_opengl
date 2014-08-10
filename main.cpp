@@ -36,8 +36,8 @@ bool MyWindow::valid() {
 
 void MyWindow::draw() {
 	if( !valid() ) {
-	//	ortho();
 		ginit();
+	//	ortho();
 	}
 /*
 	glDrawBuffer(GL_FRONT_AND_BACK);

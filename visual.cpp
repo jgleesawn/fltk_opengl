@@ -4,9 +4,11 @@
 const std::string strVertexShader(
 "#version 330\n"
 "layout(location = 0) in vec4 position;\n"
+"layout(location = 1) in vec4 offset;\n"
 "void main()\n"
 "{\n"
-"	gl_Position = position;\n"
+"	gl_Position = position+offset;\n"
+//"	gl_Position = position;\n"
 "}\n"
 );
 
@@ -23,10 +25,14 @@ const std::string strFragmentShader(
 "}\n"
 );
 
-const float vertexPositions[] = {
-	0.75f, 0.75f, 0.0f, 1.0f,
-	0.75f, -0.75f, 0.0f, 1.0f,
-	-0.75f, -0.75f, 0.0f, 1.0f,
+float o = 0.5f;
+float vertexPositions[] = {
+	o, o, 0.0f, 1.0f,
+	o, -o, 0.0f, 1.0f,
+	-o, -o, 0.0f, 1.0f,
+	0.0f, 0.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f, 0.0f,
 };
 
 GLuint theProgram;
@@ -115,19 +121,34 @@ void ginit() {
 	InitializeProgram();
 }
 
+float voffset[] = {
+	0.0f, 0.0f, 0.0f, 0.0f,
+};
+
 void display() {
+	voffset[0] += .01;
+	voffset[1] += .01;
+	voffset[2] += .01;
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(theProgram);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
+	glBufferSubData(GL_ARRAY_BUFFER, 4*12, sizeof(voffset), &voffset);
+	glBufferSubData(GL_ARRAY_BUFFER, 4*16, sizeof(voffset), &voffset);
+	glBufferSubData(GL_ARRAY_BUFFER, 4*20, sizeof(voffset), &voffset);
+
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(4*12));
 	
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	glUseProgram(0);
 	
 }
