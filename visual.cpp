@@ -74,7 +74,7 @@ GLuint CreateShader(GLenum eShaderType, const std::string &strShaderFile) {
 
 GLuint CreateProgram(const std::vector<GLuint> &shaderList) {
 	GLuint program = glCreateProgram();
-	
+
 	for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
 		glAttachShader(program, shaderList[iLoop]);
 	
@@ -118,7 +118,7 @@ void ginit() {
 void display() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	
+
 	glUseProgram(theProgram);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);

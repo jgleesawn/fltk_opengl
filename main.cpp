@@ -22,7 +22,7 @@ class MyWindow : public Fl_Gl_Window {
 	int basex, basey, curx, cury;
 	
 public:
-	MyWindow(int X, int Y, int W, int H, const char *L)  : Fl_Gl_Window(X, Y, W, H, L),basex(0),basey(0),curx(-2),cury(2) {}
+	MyWindow(int X, int Y, int W, int H, const char *L)  : Fl_Gl_Window(X, Y, W, H, L),basex(0),basey(0),curx(-2),cury(2),v(false) {}
 	void InitGL();
 };
 
