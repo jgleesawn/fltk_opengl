@@ -1,32 +1,6 @@
 #include "visual.h"
 
 
-const std::string strVertexShader(
-"#version 330\n"
-"layout(location = 0) in vec4 position;\n"
-"layout(location = 1) in vec4 offset;\n"
-"uniform vec2 uOffset;\n"
-"void main()\n"
-"{\n"
-"	vec4 totalOffset = offset + vec4(uOffset.x, uOffset.y, 0.0, 0.0);\n"
-"	gl_Position = position + totalOffset;\n"
-//"	gl_Position = position;\n"
-"}\n"
-);
-
-
-const std::string strFragmentShader(
-"#version 330\n"
-"out vec4 outputColor;\n"
-"void main()\n"
-"{\n"
-"	float lerpValue = gl_FragCoord.y / 180.0f;\n"
-"	outputColor = mix(vec4(1.0f, 1.0f, 1.0f, 1.0f),\n"
-"			vec4(0.2f, 0.2f, 0.2f, 1.0f), lerpValue);\n"
-//"	outputColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
-"}\n"
-);
-
 float o = 0.5f;
 float vertexPositions[] = {
 	o, o, 0.0f, 1.0f,
@@ -41,6 +15,9 @@ GLuint theProgram;
 
 void InitializeProgram()
 {
+	std::string strVertexShader = getShaderFromFile("vertex.shader");	
+	std::string strFragmentShader = getShaderFromFile("fragment.shader");
+
 	std::vector<GLuint> shaderList;
 	
 	shaderList.push_back(CreateShader(GL_VERTEX_SHADER, strVertexShader));

@@ -8,6 +8,8 @@
 //#include <GL/glext.h>
 //#include <GL/freeglut.h>
 
+#include "shader_util.h"
+
 void InitializeProgram();
 GLuint CreateShader(GLenum, const std::string &);
 GLuint CreateProgram(const std::vector<GLuint> &);
