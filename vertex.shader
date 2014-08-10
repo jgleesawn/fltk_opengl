@@ -6,8 +6,11 @@ uniform vec2 uOffset;
 uniform float loopDuration;
 uniform float time;
 
+varying float scalar;
+
 void main()
 {
+	scalar += 0.1;
 //	vec4 totalOffset = offset + vec4(uOffset.x,uOffset.y,0.0f,0.0f);
 	float timeScale = 3.14159f * 2.0f / loopDuration;
 

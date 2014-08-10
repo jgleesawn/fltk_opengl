@@ -31,8 +31,12 @@ void InitializeProgram()
 	elapsedTimeUniform = glGetUniformLocation(theProgram, "time");
 
 	GLuint loopDurationUnf = glGetUniformLocation(theProgram, "loopDuration");
+	GLuint FragLoopDurationUnf = glGetUniformLocation(theProgram, "fragLoopDuration");
+
 	glUseProgram(theProgram);
 	glUniform1f(loopDurationUnf, 5.0f);
+	glUniform1f(FragLoopDurationUnf, 2.5f);
+//Could set Distance from top of window here as a uniform vector.
 	glUseProgram(0);
 }
 
