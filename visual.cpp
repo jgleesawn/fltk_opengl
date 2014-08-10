@@ -6,17 +6,15 @@ float vertexPositions[] = {
 	o, o, 0.0f, 1.0f,
 	o, -o, 0.0f, 1.0f,
 	-o, -o, 0.0f, 1.0f,
-	0.0f, 0.0f, 0.0f, 0.0f,
-	0.0f, 0.0f, 0.0f, 0.0f,
-	0.0f, 0.0f, 0.0f, 0.0f,
 };
 
 GLuint theProgram;
 GLuint elapsedTimeUniform;
+GLuint perspectiveMatrixUnif;
 
 void InitializeProgram()
 {
-	std::string strVertexShader = getShaderFromFile("vertex.shader");	
+	std::string strVertexShader = getShaderFromFile("v.perspective.shader");	
 	std::string strFragmentShader = getShaderFromFile("fragment.shader");
 
 	std::vector<GLuint> shaderList;
@@ -28,15 +26,34 @@ void InitializeProgram()
 	
 	std::for_each(shaderList.begin(), shaderList.end(), glDeleteShader);
 
-	elapsedTimeUniform = glGetUniformLocation(theProgram, "time");
-
-	GLuint loopDurationUnf = glGetUniformLocation(theProgram, "loopDuration");
 	GLuint FragLoopDurationUnf = glGetUniformLocation(theProgram, "fragLoopDuration");
 
+	elapsedTimeUniform = glGetUniformLocation(theProgram, "time");
+
 	glUseProgram(theProgram);
-	glUniform1f(loopDurationUnf, 5.0f);
 	glUniform1f(FragLoopDurationUnf, 2.5f);
 //Could set Distance from top of window here as a uniform vector.
+	glUseProgram(0);
+	
+//Perspective Uniform Matrix.
+	perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
+	SetPerspective();
+}
+
+void SetPerspective() {
+	float fFrustumScale = 1.0f; float fzNear = 0.5f; float fzFar = 3.0f;
+	
+	float theMatrix[16];
+	memset(theMatrix, 0, sizeof(float) * 16);
+	
+	theMatrix[0] = fFrustumScale;
+	theMatrix[5] = fFrustumScale;
+	theMatrix[10] = (fzFar + fzNear) / (fzNear - fzFar);
+	theMatrix[14] = (2 * fzFar * fzNear) / (fzNear - fzFar);
+	theMatrix[11] = -1.0f;
+	
+	glUseProgram(theProgram);
+	glUniformMatrix4fv(perspectiveMatrixUnif, 1, GL_FALSE, theMatrix);
 	glUseProgram(0);
 }
 
@@ -119,32 +136,24 @@ float voffset[] = {
 };
 
 void display() {
-	voffset[0] += .01;
-	voffset[1] += .01;
-	//voffset[2] += .01;
+	//voffset[0] += .10;
+	//voffset[1] += .10;
+	voffset[2] += .10;
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(theProgram);
 
-	glUniform2f(offsetLocation, -voffset[0], -voffset[1]);
-	glUniform1f(elapsedTimeUniform, voffset[0]);
+	glUniform3f(offsetLocation, -voffset[0], -voffset[1], -voffset[2]);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
-	glBufferSubData(GL_ARRAY_BUFFER, 4*12, sizeof(voffset), &voffset);
-	glBufferSubData(GL_ARRAY_BUFFER, 4*16, sizeof(voffset), &voffset);
-	glBufferSubData(GL_ARRAY_BUFFER, 4*20, sizeof(voffset), &voffset);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(4*12));
-	
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	
 	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
 	glUseProgram(0);
 	
 }

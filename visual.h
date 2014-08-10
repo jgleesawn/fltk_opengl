@@ -1,5 +1,7 @@
 #include <GL/glew.h>
 
+#include <string.h>
+
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -17,3 +19,5 @@ void InitializeVertexBuffer();
 void ginit();
 void display();
 void reshape(int, int);
+
+void SetPerspective();
