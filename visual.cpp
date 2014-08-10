@@ -5,9 +5,11 @@ const std::string strVertexShader(
 "#version 330\n"
 "layout(location = 0) in vec4 position;\n"
 "layout(location = 1) in vec4 offset;\n"
+"uniform vec2 uOffset;\n"
 "void main()\n"
 "{\n"
-"	gl_Position = position+offset;\n"
+"	vec4 totalOffset = offset + vec4(uOffset.x, uOffset.y, 0.0, 0.0);\n"
+"	gl_Position = position + totalOffset;\n"
 //"	gl_Position = position;\n"
 "}\n"
 );
@@ -115,10 +117,13 @@ void InitializeVertexBuffer() {
 
 }
 
+GLuint offsetLocation;
+
 void ginit() {
 	glewInit();
 	InitializeVertexBuffer();
 	InitializeProgram();
+	offsetLocation = glGetUniformLocation(theProgram, "uOffset");
 }
 
 float voffset[] = {
@@ -133,6 +138,8 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(theProgram);
+
+	glUniform2f(offsetLocation, -voffset[0], -voffset[1]);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
 	glBufferSubData(GL_ARRAY_BUFFER, 4*12, sizeof(voffset), &voffset);
