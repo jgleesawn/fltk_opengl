@@ -16,7 +16,10 @@ const std::string strFragmentShader(
 "out vec4 outputColor;\n"
 "void main()\n"
 "{\n"
-"	 outputColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
+"	float lerpValue = gl_FragCoord.y / 180.0f;\n"
+"	outputColor = mix(vec4(1.0f, 1.0f, 1.0f, 1.0f),\n"
+"			vec4(0.2f, 0.2f, 0.2f, 1.0f), lerpValue);\n"
+//"	outputColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
 "}\n"
 );
 
