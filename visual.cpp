@@ -12,6 +12,7 @@ float vertexPositions[] = {
 };
 
 GLuint theProgram;
+GLuint elapsedTimeUniform;
 
 void InitializeProgram()
 {
@@ -26,6 +27,13 @@ void InitializeProgram()
 	theProgram = CreateProgram(shaderList);
 	
 	std::for_each(shaderList.begin(), shaderList.end(), glDeleteShader);
+
+	elapsedTimeUniform = glGetUniformLocation(theProgram, "time");
+
+	GLuint loopDurationUnf = glGetUniformLocation(theProgram, "loopDuration");
+	glUseProgram(theProgram);
+	glUniform1f(loopDurationUnf, 5.0f);
+	glUseProgram(0);
 }
 
 GLuint CreateShader(GLenum eShaderType, const std::string &strShaderFile) {
@@ -91,7 +99,6 @@ void InitializeVertexBuffer() {
 	glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 }
 
 GLuint offsetLocation;
@@ -110,13 +117,14 @@ float voffset[] = {
 void display() {
 	voffset[0] += .01;
 	voffset[1] += .01;
-	voffset[2] += .01;
+	//voffset[2] += .01;
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(theProgram);
 
 	glUniform2f(offsetLocation, -voffset[0], -voffset[1]);
+	glUniform1f(elapsedTimeUniform, voffset[0]);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
 	glBufferSubData(GL_ARRAY_BUFFER, 4*12, sizeof(voffset), &voffset);
