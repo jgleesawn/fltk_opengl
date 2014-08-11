@@ -1,1 +1,1 @@
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./glew-1.10.0/lib/
+export LD_LIBRARY_PATH=./glew-1.10.0/lib/
