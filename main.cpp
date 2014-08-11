@@ -21,6 +21,10 @@ class MyWindow : public Fl_Gl_Window {
 	bool v;
 	int basex, basey, curx, cury;
 	
+	Object object;
+	VisualEngine ve;
+	PhysicsEngine pe;
+
 public:
 	MyWindow(int X, int Y, int W, int H, const char *L)  : Fl_Gl_Window(X, Y, W, H, L),basex(0),basey(0),curx(-2),cury(2),v(false) {}
 	void InitGL();
@@ -46,7 +50,8 @@ void MyWindow::draw() {
 	gl_font(FL_COURIER,12);
 	gl_draw("TEST",50,50);
 */
-	display();
+	pe.Step(object);
+	ve.Draw(object);
 
 	glDrawBuffer(GL_BACK);
 }

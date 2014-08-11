@@ -1,15 +1,17 @@
 #include "visual.h"
 
+VisualEngine::VisualEngine() {
+	std::vector<shaderName> shaderNames;
+	shaderNames.push_back(shaderName(GL_VERTEX_SHADER, std::string("v.perspective.shader")));
+	shaderNames.push_back(shaderName(GL_FRAGMENT_SHADER, std::string("fragment.shader")));
 
-float o = 0.5f;
-float vertexPositions[] = {
-	o, o, 0.0f, 1.0f,
-	o, -o, 0.0f, 1.0f,
-	-o, -o, 0.0f, 1.0f,
-};
+	InitializeProgram(shaderNames);
 
-GLuint elapsedTimeUniform;
-GLuint perspectiveMatrixUnif;
+	offsetLocation = glGetUniformLocation(theProgram, "uOffset");
+	perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
+
+	SetPerspective();
+}
 
 void VisualEngine::SetPerspective() {
 	float fFrustumScale = 1.0f; float fzNear = 0.5f; float fzFar = 3.0f;
@@ -28,28 +30,7 @@ void VisualEngine::SetPerspective() {
 	glUseProgram(0);
 }
 
-void InitializeVertexBuffer() {
-	glGenBuffers(1, &positionBufferObject);
-	
-	glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-GLuint offsetLocation;
-
-void ginit() {
-	glewInit();
-	InitializeVertexBuffer();
-	InitializeProgram();
-	offsetLocation = glGetUniformLocation(theProgram, "uOffset");
-}
-
-float voffset[] = {
-	0.0f, 0.0f, 0.0f, 0.0f,
-};
-
-void display() {
+void VisualEngine::Draw(Object & obj) {
 	//voffset[0] += .10;
 	//voffset[1] += .10;
 	voffset[2] += .10;
@@ -60,12 +41,12 @@ void display() {
 
 	glUniform3f(offsetLocation, -voffset[0], -voffset[1], -voffset[2]);
 	
-	glBindBuffer(GL_ARRAY_BUFFER, positionBufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, obj.positionBufferObject);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLE_STRIP, 1, obj.position.size()-1);
 	
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);

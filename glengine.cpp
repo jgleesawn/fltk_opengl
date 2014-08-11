@@ -17,7 +17,7 @@ void GLEngine::InitializeProgram(const std::vector<shaderName> & shaderNames)
 	std::vector<GLuint> shaderList;
 	std::vector<shaderName>::iterator it;
 	for( it = shaderNames.Begin(); it != shaderNames.End(); it++) {
-		std::string strShader = getShaderFromFile(it->second);
+		std::string strShader = getShaderFromFile(it->second.c_str());
 		shaderList.push_back(CreateShader(it->first,strShader);
 	}
 	
