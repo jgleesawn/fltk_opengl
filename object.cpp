@@ -6,8 +6,8 @@ Object::Object() {
 	for( int i=0; i<10; i++) {
 		temp.data[0] += .1;
 		temp.data[1] += .1;
-		temp.data[2] += .1;
-		temp.data[3] += .1;
+		temp.data[2] -= .1;
+//		temp.data[3] += .1;
 		position.push_back(temp);
 	}
 	InitializeVertexBuffer();

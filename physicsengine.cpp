@@ -6,7 +6,8 @@ PhysicsEngine::PhysicsEngine() {}
 //VE is created before GL context is set up.
 void PhysicsEngine::Init() {
 	std::vector<shaderName> shaderNames;
-	shaderNames.push_back(shaderName(GL_VERTEX_SHADER, std::string("physics.shader")));
+	shaderNames.push_back(shaderName(GL_VERTEX_SHADER, std::string("p.vertex.shader")));
+	shaderNames.push_back(shaderName(GL_FRAGMENT_SHADER, std::string("p.fragment.shader")));
 	
 	InitializeProgram(shaderNames);
 	
@@ -33,12 +34,23 @@ void PhysicsEngine::Step(Object & obj) {
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 4, 0);
 		glVertexAttribDivisor(1, 1);
 
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 4, 0);
+		glVertexAttribDivisor(2, 1);
+
 		glDrawArrays(GL_POINTS, 1, obj.position.size()-1 );
 
 		glGetBufferSubData(GL_ARRAY_BUFFER, sizeof(*it)*(it-b), sizeof(*it), it);
+		
+		for( int j=0; j<4; j++) {
+			fprintf(stderr, "%f ", it->data[j]);
+		}
+		fprintf(stderr, "\n");
+		
 	
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 	}
 	glUseProgram(0);
 	
