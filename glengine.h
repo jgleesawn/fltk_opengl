@@ -10,7 +10,7 @@
 #include <vector>
 #include <stdio.h>
 
-#include <pair>
+#include <utility>	//For pair
 
 //#include <GL/gl.h>
 //#include <GL/glext.h>
@@ -20,12 +20,15 @@
 
 typedef std::pair<GLenum,std::string> shaderName;
 class GLEngine {
+protected:
 	GLuint theProgram;
 
-	void InitializeProgram(const std::vector<shaderName> &);
+	void InitializeProgram(std::vector<shaderName> &);
 	GLuint CreateShader(GLenum, const std::string &);
 	GLuint CreateProgram(const std::vector<GLuint> &);
 public:
 
-}
+};
 
+
+#endif

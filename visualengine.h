@@ -1,6 +1,7 @@
-#include VISUALENGINE_H
+#ifndef VISUALENGINE_H
 #define VISUALENGINE_H
 
+#include <GL/glew.h>
 #include <string>
 
 #include "glengine.h"
@@ -12,14 +13,15 @@ class VisualEngine : public GLEngine {
 	GLuint perspectiveMatrixUnif;
 	GLuint elapsedTimeUniform;
 
-	Gluint offsetLocation;
+	GLuint offsetLocation;
 
 	float voffset[4];
 public:
 	VisualEngine();
+	void Init();
+
 	void Draw(Object &);
 
-	void SetPerspective();
 	void reshape(int, int);
 };
 

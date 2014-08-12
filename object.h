@@ -4,12 +4,17 @@
 #include <GL/glew.h>
 #include <vector>
 
+#include "othertypes.h"
+
+
 class Object {
 	GLuint positionBufferObject;
 	void InitializeVertexBuffer();
 public:
 	Object();
-	std::vector<float[4]> position;
+	std::vector<vec4<float> > position;
+
+	GLuint getPBO() { return positionBufferObject; }
 };
 
 #endif

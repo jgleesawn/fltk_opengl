@@ -1,6 +1,10 @@
-#include "visual.h"
+#include "visualengine.h"
 
-VisualEngine::VisualEngine() {
+VisualEngine::VisualEngine() {}
+
+//Need Init function so that the GL context is set up already;
+//VE is created before GL context is set up.
+void VisualEngine::Init() {
 	std::vector<shaderName> shaderNames;
 	shaderNames.push_back(shaderName(GL_VERTEX_SHADER, std::string("v.perspective.shader")));
 	shaderNames.push_back(shaderName(GL_FRAGMENT_SHADER, std::string("fragment.shader")));
@@ -41,7 +45,7 @@ void VisualEngine::Draw(Object & obj) {
 
 	glUniform3f(offsetLocation, -voffset[0], -voffset[1], -voffset[2]);
 	
-	glBindBuffer(GL_ARRAY_BUFFER, obj.positionBufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, obj.getPBO());
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);

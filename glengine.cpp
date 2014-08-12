@@ -1,24 +1,17 @@
 #include "glengine.h"
 
-/*
-float o = 0.5f;
-float vertexPositions[] = {
-	o, o, 0.0f, 1.0f,
-	o, -o, 0.0f, 1.0f,
-	-o, -o, 0.0f, 1.0f,
-};
-*/
 
-void GLEngine::InitializeProgram(const std::vector<shaderName> & shaderNames)
+
+void GLEngine::InitializeProgram(std::vector<shaderName> & shaderNames)
 {
 //	std::string strVertexShader = getShaderFromFile("v.perspective.shader");	
 //	std::string strFragmentShader = getShaderFromFile("fragment.shader");
 
 	std::vector<GLuint> shaderList;
 	std::vector<shaderName>::iterator it;
-	for( it = shaderNames.Begin(); it != shaderNames.End(); it++) {
-		std::string strShader = getShaderFromFile(it->second.c_str());
-		shaderList.push_back(CreateShader(it->first,strShader);
+	for( it = shaderNames.begin(); it != shaderNames.end(); it++) {
+		std::string strShader(getShaderFromFile(it->second.c_str()));
+		shaderList.push_back(CreateShader(it->first,strShader));
 	}
 	
 //	shaderList.push_back(CreateShader(GL_VERTEX_SHADER, strVertexShader));
