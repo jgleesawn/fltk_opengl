@@ -4,6 +4,9 @@
 #include <GL/glew.h>
 #include <vector>
 
+#include <cmath>
+
+
 #include "othertypes.h"
 
 

@@ -15,6 +15,7 @@ void main()
 	float currLerp = currTime / fragLoopDuration;
 
 	outputColor = mix(firstColor, secondColor, currLerp);
+//	outputColor = firstColor;
 	//outputColor[0] *= scalar;
 	//outputColor[1] *= scalar;
 //	float lerpValue = gl_FragCoord.y / 180.0f;

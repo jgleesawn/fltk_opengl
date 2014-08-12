@@ -10,4 +10,5 @@ void main()
 {
 	vec4 cameraPos = position + vec4( uOffset.x, uOffset.y, uOffset.z, 0.0f);
 	gl_Position = perspectiveMatrix * cameraPos;
+	//gl_Position = position; //cameraPos;
 }

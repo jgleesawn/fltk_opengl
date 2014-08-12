@@ -34,9 +34,9 @@ void PhysicsEngine::Step(Object & obj) {
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 4, 0);
 		glVertexAttribDivisor(1, 1);
 
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 4, 0);
-		glVertexAttribDivisor(2, 1);
+//		glEnableVertexAttribArray(2);
+//		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 4, 0);
+//		glVertexAttribDivisor(2, 1);
 
 		glDrawArrays(GL_POINTS, 1, obj.position.size()-1 );
 

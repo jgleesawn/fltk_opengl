@@ -67,12 +67,6 @@ void MyWindow::draw() {
 */
 	for( std::vector<Object>::iterator it = objects.begin(); it != objects.end(); it++) {
 		pe.Step(*it);
-		for( int i=0; i<(*it).position.size(); i++) {
-			for( int j=0; j<4; j++){
-				//fprintf(stderr,"%f ", (*it).position[i].data[j]);
-			}
-			//fprintf(stderr,"\n");
-		}
 		ve.Draw(*it);
 	}
 

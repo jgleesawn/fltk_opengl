@@ -12,6 +12,7 @@ class VisualEngine : public GLEngine {
 
 	GLuint perspectiveMatrixUnif;
 	GLuint elapsedTimeUniform;
+	GLuint fragLoopDuration;
 
 	GLuint offsetLocation;
 
@@ -25,7 +26,5 @@ public:
 	void reshape(int, int);
 };
 
-void ginit();
-void display();
 
 #endif

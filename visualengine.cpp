@@ -1,6 +1,11 @@
 #include "visualengine.h"
 
-VisualEngine::VisualEngine() {}
+VisualEngine::VisualEngine() {
+	voffset[0] = 0.0f;
+	voffset[1] = 0.0f;
+	voffset[2] = 0.0f;
+	voffset[3] = 0.0f;
+}
 
 //Need Init function so that the GL context is set up already;
 //VE is created before GL context is set up.
@@ -11,10 +16,20 @@ void VisualEngine::Init() {
 
 	InitializeProgram(shaderNames);
 
+	
 	offsetLocation = glGetUniformLocation(theProgram, "uOffset");
 	perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
 
+
+	elapsedTimeUniform = glGetUniformLocation(theProgram, "time");
+	fragLoopDuration = glGetUniformLocation(theProgram, "fragLoopDuration");
+
 	SetPerspective();
+
+	glUseProgram(theProgram);
+	glUniform1f(fragLoopDuration, (GLfloat)2.5f);
+	glUseProgram(0);
+
 }
 
 void VisualEngine::SetPerspective() {
@@ -35,22 +50,29 @@ void VisualEngine::SetPerspective() {
 }
 
 void VisualEngine::Draw(Object & obj) {
+	GLenum glerr = glGetError();
+	if( glerr != 0 )
+		fprintf(stderr, "%s\n", gluErrorString(glerr));
+
 	//voffset[0] += .10;
 	//voffset[1] += .10;
-	voffset[2] += .10;
+	//voffset[2] += .10;
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(theProgram);
 
+	glUniform1f(elapsedTimeUniform, voffset[2]);
 	glUniform3f(offsetLocation, -voffset[0], -voffset[1], -voffset[2]);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, obj.getPBO());
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(4*4));
 
-	glDrawArrays(GL_TRIANGLE_STRIP, 1, obj.position.size()-1);
+	//glDrawArrays(GL_TRIANGLE_STRIP, 1, obj.position.size()-1);
+	glDrawArrays(GL_POINTS, 1, obj.position.size()-1);
 	
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
