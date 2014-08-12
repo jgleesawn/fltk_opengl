@@ -4,13 +4,13 @@
 
 void GLEngine::InitializeProgram(std::vector<shaderName> & shaderNames)
 {
-//	std::string strVertexShader = getShaderFromFile("v.perspective.shader");	
-//	std::string strFragmentShader = getShaderFromFile("fragment.shader");
+//	std::string strVertexShader = getFile("v.perspective.shader");	
+//	std::string strFragmentShader = getFile("fragment.shader");
 
 	std::vector<GLuint> shaderList;
 	std::vector<shaderName>::iterator it;
 	for( it = shaderNames.begin(); it != shaderNames.end(); it++) {
-		std::string strShader(getShaderFromFile(it->second.c_str()));
+		std::string strShader(getFile(it->second.c_str()));
 		shaderList.push_back(CreateShader(it->first,strShader));
 	}
 	
@@ -64,7 +64,15 @@ GLuint GLEngine::CreateProgram(const std::vector<GLuint> &shaderList) {
 		glAttachShader(program, shaderList[iLoop]);
 	
 	glLinkProgram(program);
-	
+	CheckProgram(program);
+
+	for( size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
+		glDetachShader(program, shaderList[iLoop]);
+
+	return program;
+}
+
+void GLEngine::CheckProgram(GLuint & program) {
 	GLint status;
 	glGetProgramiv (program, GL_LINK_STATUS, &status);
 	if (status == GL_FALSE) {
@@ -76,9 +84,4 @@ GLuint GLEngine::CreateProgram(const std::vector<GLuint> &shaderList) {
 		fprintf(stderr, "Linker failure: %s\n", strInfoLog);
 		delete[] strInfoLog;
 	}
-	
-	for( size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
-		glDetachShader(program, shaderList[iLoop]);
-		
-	return program;
 }

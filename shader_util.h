@@ -5,4 +5,4 @@
 #include <fstream>
 #include <streambuf>
 
-std::string getShaderFromFile(const char *);
+std::string getFile(const char *);

@@ -1,6 +1,6 @@
 #include "shader_util.h"
 
-std::string getShaderFromFile(const char * filename) {
+std::string getFile(const char * filename) {
 	std::ifstream t(filename);
 	std::string str;
 

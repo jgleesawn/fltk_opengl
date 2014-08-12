@@ -1,7 +1,7 @@
-#ifndef GLENGINE_H
-#define GLENGINE_H
+#ifndef CLENGINE_H
+#define CLENGINE_H
 
-#include <GL/glew.h>
+#include <CL/cl.h>
 
 #include <string.h>
 
@@ -10,24 +10,24 @@
 #include <vector>
 #include <stdio.h>
 
-#include <utility>	//For pair
-
-//#include <GL/gl.h>
-//#include <GL/glext.h>
-//#include <GL/freeglut.h>
 
 #include "shader_util.h"
 
-typedef std::pair<GLenum,std::string> shaderName;
-class GLEngine {
+class CLEngine {
 protected:
-	GLuint theProgram;
+	cl_device_id device;
+	cl_context context;
+	cl_program program;
+	cl_kernel kernel;
+	cl_command_queue queue;
 
+	void InitializeProgram(const char *);
 	void InitializeProgram(std::vector<shaderName> &);
 	GLuint CreateShader(GLenum, const std::string &);
 	GLuint CreateProgram(const std::vector<GLuint> &);
 	void   CheckProgram(GLuint &);
 public:
+	CLEngine();
 
 };
 
