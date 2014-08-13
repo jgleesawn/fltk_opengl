@@ -16,6 +16,8 @@ class Object;
 
 
 class PhysicsEngine : public CLEngine {
+	cl_mem input0;
+	cl_mem input4;
 public:
 	PhysicsEngine();
 	void Init();
