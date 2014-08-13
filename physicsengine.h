@@ -19,6 +19,7 @@ class Object;
 class PhysicsEngine : public CLEngine {
 public:
 	PhysicsEngine();
+	void Init();
 
 	void Step(Object &);
 };

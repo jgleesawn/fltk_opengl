@@ -12,9 +12,11 @@ Object::Object() {
 	}
 	InitializeVertexBuffer();
 
+	glFinish();
 	int err;
 	cl_vbo_mem = clCreateFromGLBuffer(pe->getContext(), CL_MEM_READ_WRITE, positionBufferObject, &err);
-	if(err != CL_SUCCESS) { perror("Couldn't create CLbuffer from GLbuffer."); cl_vbo_mem = NULL; }
+	fprintf(stderr,"%i\n",err);
+	if(err != CL_SUCCESS) { perror("Couldn't create CLbuffer from GLbuffer."); cl_vbo_mem = 0;}
 }
 
 void Object::InitializeVertexBuffer(){

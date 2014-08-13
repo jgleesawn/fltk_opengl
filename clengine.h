@@ -2,6 +2,9 @@
 #define CLENGINE_H
 
 #include <CL/cl.h>
+#include <CL/cl_gl.h>
+
+#include <GL/glx.h>
 
 #include <string.h>
 
@@ -10,6 +13,7 @@
 #include <vector>
 #include <stdio.h>
 
+#pragma OPENCL EXTENSION cl_khr_gl_sharing : enable
 
 #include "shader_util.h"
 
@@ -21,6 +25,7 @@ protected:
 	cl_kernel kernel;
 	cl_command_queue queue;
 
+	void _init();//Required for the glx context functions.
 	void InitializeProgram(const char *);
 public:
 	CLEngine();

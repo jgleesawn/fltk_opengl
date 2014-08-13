@@ -1,8 +1,11 @@
 #include "physicsengine.h"
 
-PhysicsEngine::PhysicsEngine() : CLEngine() { 
+PhysicsEngine::PhysicsEngine() : CLEngine() {}
+
+void PhysicsEngine::Init() {
+	_init();
+
 	int err;
-	
 	InitializeProgram("physics.cl");
 	
 	queue = clCreateCommandQueue(context, device, 0, &err);
@@ -16,6 +19,7 @@ void PhysicsEngine::Step(Object & obj) {
 	int err;
 	
 	glFinish();
+	if(obj.cl_vbo_mem == 0 ) { return; }
 	err = clEnqueueAcquireGLObjects(queue, 1, &obj.cl_vbo_mem, 0, NULL, NULL );
 	if(err < 0) { perror("Acquire GLObject failed."); }
 	

@@ -19,10 +19,11 @@ class Object {
 
 	void InitializeVertexBuffer();
 public:
-	cl_mem	cl_vbo_mem;
 	Object();
-	std::vector<vec4<float> > position;
 
+	std::vector<vec4<float> > position;
+	cl_mem	cl_vbo_mem;
+ 
 	GLuint getPBO() { return positionBufferObject; }
 };
 
