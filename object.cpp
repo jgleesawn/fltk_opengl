@@ -1,6 +1,7 @@
 #include "object.h"
 
-Object::Object() {
+Object::Object(PhysicsEngine * pep) {
+	pe = pep;
 	vec4<float> temp = {0.0, 0.0, 0.0, 1.0};
 	position.push_back(temp);
 	for( int i=0; i<10; i++) {
@@ -12,8 +13,10 @@ Object::Object() {
 	}
 	InitializeVertexBuffer();
 
-	glFinish();
+//	glFinish();
 	int err;
+//	cl::BufferGL(pe->getContext(), CL_MEM_READ_WRITE, positionBufferObject, &err);
+
 	cl_vbo_mem = clCreateFromGLBuffer(pe->getContext(), CL_MEM_READ_WRITE, positionBufferObject, &err);
 	fprintf(stderr,"%i\n",err);
 	if(err != CL_SUCCESS) { perror("Couldn't create CLbuffer from GLbuffer."); cl_vbo_mem = 0;}

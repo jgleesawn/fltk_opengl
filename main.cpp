@@ -22,7 +22,7 @@ class MyWindow : public Fl_Gl_Window {
 	void draw();
 	int handle(int);
 	
-	bool valid();
+	//bool valid();
 	bool v;
 	int basex, basey, curx, cury;
 	
@@ -36,13 +36,13 @@ public:
 	void InitGL();
 };
 
-bool MyWindow::valid() {
-	if(!v) {
-		v = true;
-		return false;
-	}
-	return true;
-}
+//bool MyWindow::valid() {
+//	if(!v) {
+//		v = true;
+//		return false;
+//	}
+//	return true;
+//}
 
 void MyWindow::draw() {
 	if( !valid() ) {
@@ -53,7 +53,7 @@ void MyWindow::draw() {
 			exit(1);
 		pe.Init();
 		ve.Init();
-		objects.push_back(Object()); //Requires glewInit to be run.
+		objects.push_back(Object(&pe)); //Requires glewInit to be run.
 
 	//	ginit();
 	//	ortho();

@@ -2,8 +2,7 @@
 #define PHYSICSENGINE_H
 
 #include <GL/glew.h>
-#include <CL/cl.h>
-#include <CL/cl_gl.h>
+#include <CL/opencl.h>
 
 #include <string>
 #include <vector>

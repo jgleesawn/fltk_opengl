@@ -23,7 +23,9 @@ void CLEngine::_init() {
 	clGetDeviceInfo(device, CL_DEVICE_EXTENSIONS, 500,params,&size);
 	fprintf(stderr,"%s\n",params);
 
-	fprintf(stderr,"%i %i\n",glXGetCurrentContext(), glXGetCurrentDisplay());
+//	CONTEXTS ARE DIFFERENT ON DIFFERENT SYSTEMS
+//	REQUIRES MORE CODE TO BE COMPATIBLE WITH MACOSX/WINDOWS
+//	fprintf(stderr,"gl_context: %i\nglx_context: %i\n", gl_context, glXGetCurrentContext()); 
 	cl_context_properties properties[] = 
 	{
 		CL_GL_CONTEXT_KHR, (cl_context_properties) glXGetCurrentContext(),
@@ -32,8 +34,8 @@ void CLEngine::_init() {
 		0
 	};
 	context = clCreateContext(properties, 1, &device, NULL, NULL, &err);
-	fprintf(stderr,"%i\n",err);
 	if(err < 0) { perror("Couldn't create a context."); exit(1); }
+	fprintf(stderr,"PEC: %i\n", context);
 }
 
 void CLEngine::InitializeProgram(const char * filename) {

@@ -1,8 +1,7 @@
 #ifndef CLENGINE_H
 #define CLENGINE_H
 
-#include <CL/cl.h>
-#include <CL/cl_gl.h>
+#include <CL/opencl.h>
 
 #include <GL/glx.h>
 
@@ -25,6 +24,8 @@ protected:
 	cl_kernel kernel;
 	cl_command_queue queue;
 
+	void * gl_context;
+	
 	void _init();//Required for the glx context functions.
 	void InitializeProgram(const char *);
 public:

@@ -2,8 +2,7 @@
 #define OBJECT_H
 
 #include <GL/glew.h>
-#include <CL/cl.h>
-#include <CL/cl_gl.h>
+#include <CL/opencl.h>
 
 #include <vector>
 #include <stdio.h>
@@ -19,7 +18,7 @@ class Object {
 
 	void InitializeVertexBuffer();
 public:
-	Object();
+	Object(PhysicsEngine *);
 
 	std::vector<vec4<float> > position;
 	cl_mem	cl_vbo_mem;
