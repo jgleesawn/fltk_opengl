@@ -2,9 +2,11 @@
 
 CLEngine::CLEngine() {
 	int err;
+	cl_uint np;
 	cl_platform_id platform;
-	err = clGetPlatformIDs(1, &platform, NULL);
-	if(err < 0) { perror("Couldn't identify a platform"); exit(1); }
+	err = clGetPlatformIDs(1, &platform, &np);
+	fprintf(stderr, "%ui platforms available.\n", np);
+	if(err < 0) { fprintf(stderr,"%i\n",err); perror("Couldn't identify a platform"); exit(1); }
 	
 	err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL);
 	if(err == CL_DEVICE_NOT_FOUND) {
