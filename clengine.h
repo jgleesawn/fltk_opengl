@@ -22,10 +22,6 @@ protected:
 	cl_command_queue queue;
 
 	void InitializeProgram(const char *);
-	void InitializeProgram(std::vector<shaderName> &);
-	GLuint CreateShader(GLenum, const std::string &);
-	GLuint CreateProgram(const std::vector<GLuint> &);
-	void   CheckProgram(GLuint &);
 public:
 	CLEngine();
 

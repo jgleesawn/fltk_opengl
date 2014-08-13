@@ -2,6 +2,7 @@
 #define PHYSICSENGINE_H
 
 #include <CL/cl.h>
+#include <CL/cl_gl.h>
 
 #include <GL/glew.h>
 #include <string>
@@ -13,21 +14,9 @@
 #include "othertypes.h"
 
 
-class PhysicsEngine : public GLEngine {
-	cl_device_id device;
-	cl_context context;
-	cl_program program;
-	cl_kernel kernel;
-	cl_command_queue queue;
-
-
-	GLuint originalPositionLocation;
-	GLuint textureLocation;
-
-	GLuint CreateProgram(const std::vector<GLuint> &);
+class PhysicsEngine : public CLEngine {
 public:
 	PhysicsEngine();
-	void Init();
 
 	void Step(Object &);
 };
