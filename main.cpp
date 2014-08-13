@@ -51,7 +51,7 @@ void MyWindow::draw() {
 			exit(1);
 		if (!GLEW_VERSION_3_3)
 			exit(1);
-		pe.Init();
+//		pe.Init();
 		ve.Init();
 		objects.push_back(Object()); //Requires glewInit to be run.
 

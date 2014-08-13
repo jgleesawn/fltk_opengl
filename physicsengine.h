@@ -1,17 +1,19 @@
 #ifndef PHYSICSENGINE_H
 #define PHYSICSENGINE_H
 
+#include <GL/glew.h>
 #include <CL/cl.h>
 #include <CL/cl_gl.h>
 
-#include <GL/glew.h>
 #include <string>
 #include <vector>
 
-#include "glengine.h"
+#include "clengine.h"
+#include "othertypes.h"
+
+class Object;
 #include "object.h"
 
-#include "othertypes.h"
 
 
 class PhysicsEngine : public CLEngine {

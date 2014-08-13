@@ -5,7 +5,7 @@ LIBS=-lfltk -lfltk_gl -lGL -lGLEW -lGLU
 LIBS1.3=-ldl -lXft -lXinerama
 LIBSCL=-lOpenCL
 
-FILES=main.cpp glengine.cpp shader_util.cpp physicsengine.cpp visualengine.cpp object.cpp
+FILES=main.cpp glengine.cpp clengine.cpp shader_util.cpp physicsengine.cpp visualengine.cpp object.cpp
 
 all:
 	$(CC) $(FILES) $(INCLUDES) $(LIB_PATH) $(LIBS) $(LIBS1.3) $(LIBSCL)

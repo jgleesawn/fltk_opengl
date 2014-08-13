@@ -24,6 +24,7 @@ protected:
 	void InitializeProgram(const char *);
 public:
 	CLEngine();
+	cl_context getContext() {return context;}
 
 };
 
