@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <CL/opencl.h>
 
+#include <cstdlib>
 #include <vector>
 #include <stdio.h>
 

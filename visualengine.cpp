@@ -33,7 +33,7 @@ void VisualEngine::Init() {
 }
 
 void VisualEngine::SetPerspective() {
-	float fFrustumScale = 1.0f; float fzNear = 0.5f; float fzFar = 3.0f;
+	float fFrustumScale = 50.0f; float fzNear = 0.1f; float fzFar = 5.0f;
 	
 	float theMatrix[16];
 	memset(theMatrix, 0, sizeof(float) * 16);
@@ -57,6 +57,7 @@ void VisualEngine::Draw(Object & obj) {
 	//voffset[0] += .10;
 	//voffset[1] += .10;
 	//voffset[2] += .10;
+	voffset[2] = 1.0;
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);

@@ -29,12 +29,14 @@ class MyWindow : public Fl_Gl_Window {
 	std::vector<Object> objects;
 	VisualEngine ve;
 	PhysicsEngine pe;
-
+	
 public:
-	MyWindow(int X, int Y, int W, int H, const char *L)  
-		: Fl_Gl_Window(X, Y, W, H, L),basex(0),basey(0),curx(-2),cury(2),v(false)  {  }
+	MyWindow(int X, int Y, int W, int H, const char *L);  
 	void InitGL();
 };
+
+MyWindow::MyWindow(int X, int Y, int W, int H, const char *L)
+		: Fl_Gl_Window(X, Y, W, H, L), basex(0), basey(0), curx(-2), cury(2), v(false) { }
 
 //bool MyWindow::valid() {
 //	if(!v) {

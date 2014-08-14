@@ -65,6 +65,10 @@ void PhysicsEngine::Step(Object & obj) {
 	err = clEnqueueReleaseGLObjects(queue, 1, &obj.cl_vbo_mem, 0, NULL, NULL);
 	if(err < 0) { perror("Couldn't release GLObject."); }
 	clFinish(queue);
+
+	glBindBuffer(GL_ARRAY_BUFFER, obj.getPBO());
+	glGetBufferSubData(GL_ARRAY_BUFFER, 0,sizeof(vec4<float>)*obj.position.size(),obj.position.data());
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
