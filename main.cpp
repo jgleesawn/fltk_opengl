@@ -97,18 +97,22 @@ int MyWindow::handle(int event) {
 			strcpy(text,Fl::event_text());
 			if( ekey == 65362 ) {
 //				fprintf(stderr, "up");
+				ve.voffset[1] += 1;
 				basey += 1;
 			}
 			if( ekey == 65364 ) {
 //				fprintf(stderr, "down");
+				ve.voffset[1] -= 1;
 				basey -= 1;
 			}
 			if( ekey == 65361 ) {
 //				fprintf(stderr, "left");
+				ve.voffset[0] -= 1;
 				basex -= 1;
 			}
 			if( ekey == 65363 ) {
 //				fprintf(stderr, "right");
+				ve.voffset[0] += 1;
 				basex += 1;
 			}
 			redraw();
