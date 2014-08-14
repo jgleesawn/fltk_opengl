@@ -29,22 +29,25 @@ __kernel void updateVelocity(__constant float4 * curPos, __global float4* positi
 
 if( global_id != curInd[0] ) {
 	d = positions[global_id];
-	c1 = cpos.w;
-	c2 = d.w;
-	
+//	c1 = cpos.w;
+	c1 = fabs(cpos.w);
+//	c2 = d.w;
+	c2 = -fabs(d.w);
+
 	diff = d.xyz - cpos.xyz;
 	len = length(diff);
 	
 	//float dist = 0.45f;
 	float dist = 0.45f;
+	dist = 1.0f;
 	if( len < dist )
 		len = dist;
 
 	len = len*len;
 	sum = -c1*c2*diff/len;
 //Influence of terms changes at len = 1;
-	len = len*len;
-	sum = sum + c1*c2*(diff/len);
+//	len = len*len;
+//	sum = sum + c1*c2*(diff/len);
 } else {
 	sum = (float3)(0.0f, 0.0f, 0.0f);
 }
@@ -70,7 +73,7 @@ if( global_id != curInd[0] ) {
 		int ci = curInd[0];
 		float mass = velocities[ci].z;
 		if( mass < 1.0 ) { mass = 1.0; }
-		velocities[ci].xyz += sum/(mass*100000);
+		velocities[ci].xyz += sum/(mass*10000);
 	}
 }
 /*

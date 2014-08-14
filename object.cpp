@@ -4,17 +4,31 @@ Object::Object(PhysicsEngine * pep,int num) {
 	pe = pep;
 	vec4<float> temp = {0.0, 0.0, 0.0, 1.0};
 //	position.push_back(temp);
-	for( int i=0; i<num; i++) {
+	
+	for( int i=0; i<num/2; i++) {
 		for( int j=0; j<4; j++) {
-			temp.data[j] = rand()%100 - 50;
+			temp.data[j] = rand()%100 - 150;
 			temp.data[j] /= 20;
 		}
 		temp.data[0] += .1;
 		temp.data[1] += .1;
 		temp.data[2] -= .1;
-//		temp.data[3] += .1;
+		temp.data[3] = rand()%10;
 		position.push_back(temp);
 	}
+
+	for( int i=0; i<num/2; i++) {
+		for( int j=0; j<4; j++) {
+			temp.data[j] = rand()%100 + 50;
+			temp.data[j] /= 20;
+		}
+		temp.data[0] += .1;
+		temp.data[1] += .1;
+		temp.data[2] -= .1;
+		temp.data[3] = rand()%10;
+		position.push_back(temp);
+	}
+
 	InitializeVertexBuffer();
 
 //	glFinish();
