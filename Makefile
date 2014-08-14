@@ -11,4 +11,5 @@ all:
 	$(CC) $(FILES) $(INCLUDES) $(LIB_PATH) $(LIBS) $(LIBS1.3) $(LIBSCL)
 debug:
 	$(CC) -g $(FILES) $(INCLUDES) $(LIB_PATH) $(LIBS) $(LIBS1.3) $(LIBSCL)
-
+profile:
+	$(CC) -pg $(FILES) $(INCLUDES) $(LIB_PATH) $(LIBS) $(LIBS1.3) $(LIBSCL)

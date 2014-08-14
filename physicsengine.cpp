@@ -30,10 +30,11 @@ void PhysicsEngine::Step(Object & obj) {
 
 	cl_event events[2];
 
-	const size_t globalNum = obj.position.size();
+	const size_t osize = obj.position.size();
+	const size_t globalNum = osize;
 	size_t localNum = work_group_size;
-	if( obj.position.size() < work_group_size )
-		localNum = obj.position.size();
+	if( osize < work_group_size )
+		localNum = osize;
 	const size_t numGroups = (globalNum/localNum)+1;
 	cl_mem input5 = clCreateBuffer(context, CL_MEM_READ_WRITE, numGroups*sizeof(vec4<float>), NULL, &err);
 	if(err < 0) { perror("Couldn't create comm buffer(input5).\n"); }
@@ -44,13 +45,13 @@ void PhysicsEngine::Step(Object & obj) {
 
 	//Returns if pointer is null
 	if(obj.cl_vbo_mem == 0) { return; }
-	for( int i=0; i<obj.position.size(); i++) {
+	for( int i=0; i<osize; i++) {
 //		fprintf(stderr, "pos addr: %i\n", &obj.position[i]);
 //		for( int j=0; j<4; j++)
 //			fprintf(stderr, "%f ", obj.position[i].data[j]);
 //		fprintf(stderr, "\n");
 //Added input buffers because the commented kernel args would segfault on second loop.
-		clEnqueueWriteBuffer(queue, input0, CL_FALSE, 0, sizeof(vec4<float>), &obj.position[i], 0, NULL, NULL);
+//		clEnqueueWriteBuffer(queue, input0, CL_FALSE, 0, sizeof(vec4<float>), &obj.position[i], 0, NULL, NULL);
 		clEnqueueWriteBuffer(queue, input4, CL_FALSE, 0, sizeof(int), &i, 0, NULL, NULL);
 //		err  = clSetKernelArg(kernel, 0, sizeof(float), &obj.position[i]);
 		err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input0);
@@ -62,7 +63,7 @@ void PhysicsEngine::Step(Object & obj) {
 		err |= clSetKernelArg(kernel, 5, sizeof(cl_mem), &input5);
 
 //		err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &obj.cl_vbo_mem);
-//		err |= clSetKernelArg(kernel, 1, 4*sizeof(float)*obj.position.size(), NULL);
+//		err |= clSetKernelArg(kernel, 1, 4*sizeof(float)*osize, NULL);
 //		err |= clSetKernelArg(kernel, 2, sizeof(cl_mem), &obj.cl_vbo_mem);
 		
 		if(err != CL_SUCCESS) { perror("Error setting kernel arguments."); }
@@ -78,10 +79,11 @@ void PhysicsEngine::Step(Object & obj) {
 	if(err < 0) { perror("Couldn't release memory object.(input5)"); }
 
 	clFinish(queue);
-
+/*
 	glBindBuffer(GL_ARRAY_BUFFER, obj.getPBO());
-	glGetBufferSubData(GL_ARRAY_BUFFER, 0,sizeof(vec4<float>)*obj.position.size(),obj.position.data());
+	glGetBufferSubData(GL_ARRAY_BUFFER, 0,sizeof(vec4<float>)*osize,obj.position.data());
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+*/
 }
 
 

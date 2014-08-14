@@ -37,8 +37,14 @@ public:
 	void InitGL();
 };
 
+typedef void (*func_ptr)(void *);
+void ccallback(void *);
+
 MyWindow::MyWindow(int X, int Y, int W, int H, const char *L)
-		: Fl_Gl_Window(X, Y, W, H, L), basex(0), basey(0), curx(-2), cury(2), v(false) { Help(); }
+		: Fl_Gl_Window(X, Y, W, H, L), basex(0), basey(0), curx(-2), cury(2), v(false) {
+			Help(); 
+			Fl::add_timeout(2.0, (func_ptr)ccallback, this);
+		}
 
 //bool MyWindow::valid() {
 //	if(!v) {
@@ -47,9 +53,6 @@ MyWindow::MyWindow(int X, int Y, int W, int H, const char *L)
 //	}
 //	return true;
 //}
-
-typedef void (*func_ptr)(void *);
-void ccallback(void *);
 
 void MyWindow::draw() {
 	if( !valid() ) {
@@ -78,13 +81,12 @@ void MyWindow::draw() {
 	}
 
 	glDrawBuffer(GL_BACK);
-	Fl::add_timeout(2.0, (func_ptr)ccallback, this);
 }
 
 void ccallback(void * this_ptr) {
 	((MyWindow *)this_ptr)->redraw();
 	
-	Fl::repeat_timeout(1.0/60.0, (func_ptr)ccallback, this_ptr);
+	Fl::repeat_timeout(1.0/5.0, (func_ptr)ccallback, this_ptr);
 }
 
 

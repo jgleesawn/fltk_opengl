@@ -20,12 +20,14 @@ __kernel void findForce(__constant float4 * curPos, __global float4* data,
 	float3 diff,sum;
 	float len,c1,c2;
 
-	float4 cpos = curPos[0];
+	float4 cpos = data[curInd[0]];//curPos[0];
 	float4 d;
+	
 	int global_id = get_global_id(0);
 	int local_id = get_local_id(0);
 	int work_id = global_id/get_local_size(0);
-		
+
+if( global_id != curInd[0] ) {
 	d = data[global_id];
 	c1 = cpos.w;
 	c2 = d.w;
@@ -43,6 +45,9 @@ __kernel void findForce(__constant float4 * curPos, __global float4* data,
 //Influence of terms changes at len = 1;
 	len = len*len;
 	sum = sum + c1*c2*(diff/len);
+} else {
+	sum = (float3)(0.0f, 0.0f, 0.0f);
+}
 
 	force[local_id] = (float4)(sum,0.0f);
 
@@ -62,7 +67,7 @@ __kernel void findForce(__constant float4 * curPos, __global float4* data,
 			sum += commBuff[i].xyz;
 		}
 		//Adds force to position as movement.
-		sumForce[curInd[0]] += (float4)(sum,0.0f);
+		data[curInd[0]] += (float4)(sum,0.0f);
 	}
 }
 /*
