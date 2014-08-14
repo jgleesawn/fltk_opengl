@@ -24,6 +24,8 @@ protected:
 	cl_kernel kernel;
 	cl_command_queue queue;
 
+	cl_uint	work_group_size;
+
 	void * gl_context;
 	
 	void _init();//Required for the glx context functions.

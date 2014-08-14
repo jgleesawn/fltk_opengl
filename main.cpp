@@ -48,6 +48,9 @@ MyWindow::MyWindow(int X, int Y, int W, int H, const char *L)
 //	return true;
 //}
 
+typedef void (*func_ptr)(void *);
+void ccallback(void *);
+
 void MyWindow::draw() {
 	if( !valid() ) {
 		GLenum err = glewInit(); 
@@ -75,7 +78,15 @@ void MyWindow::draw() {
 	}
 
 	glDrawBuffer(GL_BACK);
+	Fl::add_timeout(2.0, (func_ptr)ccallback, this);
 }
+
+void ccallback(void * this_ptr) {
+	((MyWindow *)this_ptr)->redraw();
+	
+	Fl::repeat_timeout(1.0/60.0, (func_ptr)ccallback, this_ptr);
+}
+
 
 int MyWindow::handle(int event) {
 	switch(event) {
@@ -105,9 +116,13 @@ int MyWindow::handle(int event) {
 //Zoom-in wrt scaling
 			if( strcmp(Fl::event_text(),"z") == 0 ) {
 				ve.voffset[2] -= .1*ve.voffset[2];
+				if( !ve.voffset[2] )
+					ve.voffset[2] = 0.0001;
 			}
 			if( strcmp(Fl::event_text(),"x") == 0 ) {
 				ve.voffset[2] += .1*ve.voffset[2];
+				if( !ve.voffset[2] )
+					ve.voffset[2] = 0.0001;
 			}
 			if( strcmp(Fl::event_text(),"q") == 0 ) {
 				ve.Zoom(2);

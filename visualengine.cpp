@@ -76,8 +76,8 @@ void VisualEngine::Draw(Object & obj) {
 	glBindBuffer(GL_ARRAY_BUFFER, obj.getPBO());
 
 	glEnableVertexAttribArray(0);
-//	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(4*4));
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(4*4));
+//	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
 	//glDrawArrays(GL_TRIANGLE_STRIP, 1, obj.position.size()-1);
 	glDrawArrays(GL_POINTS, 1, obj.position.size()-1);

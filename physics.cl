@@ -16,25 +16,25 @@ __kernel void findForce(__global float4 * curPos, __local float4* force, __globa
 
 __kernel void findForce(__constant float4 * curPos, __global float4* data,
 			__local float4* force, __global float4* sumForce,
-			__constant int * curInd ) {
+			__constant int * curInd, __global float4* commBuff ) {
 	float3 diff,sum;
 	float len,c1,c2;
 
 	float4 cpos = curPos[0];
 	float4 d;
-	int gi = get_global_id(0);
-	int li = get_local_id(0);
-for(int i=0; i<4; i++){
-	d = data[4*gi+i];
-
+	int global_id = get_global_id(0);
+	int local_id = get_local_id(0);
+	int work_id = global_id/get_local_size(0);
+		
+	d = data[global_id];
 	c1 = cpos.w;
 	c2 = d.w;
-
+	
 	diff = d.xyz - cpos.xyz;
 	len = length(diff);
-
+	
 	//float dist = 0.45f;
-	float dist = 0.2f;
+	float dist = 0.01f;
 	if( len < dist )
 		len = dist;
 
@@ -44,16 +44,25 @@ for(int i=0; i<4; i++){
 	len = len*len;
 	sum = sum + c1*c2*(diff/len);
 
-	force[4*li+i] = (float4)(sum,0.0f);
-}
+	force[local_id] = (float4)(sum,0.0f);
 
 	barrier(CLK_LOCAL_MEM_FENCE);
 	
-	if(get_local_id(0) == 0) {
+	if(local_id == 0) {
 		sum = (float3)(0.0f, 0.0f, 0.0f);
-		for(int i=0; i<get_local_size(0)*4; i++)
+		for(int i=0; i<get_local_size(0); i++)
 			sum += force[i].xyz;
-		sumForce[curInd[0]].xyz = sum;
+		commBuff[work_id].xyz = sum;
+	}
+	
+	barrier(CLK_GLOBAL_MEM_FENCE);
+	if(global_id == 0) {
+		sum = (float3)(0.0f, 0.0f, 0.0f);
+		for(int i=0; i<(get_global_size(0)/get_local_size(0)); i++) {
+			sum += commBuff[i].xyz;
+		}
+		//Adds force to position as movement.
+		sumForce[curInd[0]] += (float4)(sum,0.0f);
 	}
 }
 /*

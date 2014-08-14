@@ -23,14 +23,22 @@ void CLEngine::_init() {
 	clGetDeviceInfo(device, CL_DEVICE_EXTENSIONS, 500,params,&size);
 	fprintf(stderr,"%s\n",params);
 
-	size_t sizes[40];
-	clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, 40*sizeof(size_t), &sizes,&size);
-	fprintf(stderr,"Work Group Size: %i\n",sizes[0]);
+	clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, sizeof(cl_uint), &work_group_size,&size);
+	fprintf(stderr,"Work Group Size: %i\n",work_group_size);
+	//work_group_size /= 32;
 
+	size_t sizes[40];
 	clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES, 40*sizeof(size_t), &sizes, &size);
 	for( int i=0; i<size/sizeof(size_t); i++) {
 		fprintf(stderr,"Work Item Size: %i\n",sizes[i]);
 	}
+
+	clGetDeviceInfo(device, CL_DEVICE_GLOBAL_MEM_SIZE, 40*sizeof(size_t), &sizes, &size);
+	fprintf(stderr, "Global Mem Size: %iB\n",sizes[0]);
+
+	clGetDeviceInfo(device, CL_DEVICE_LOCAL_MEM_SIZE, 40*sizeof(size_t), &sizes, &size);
+	fprintf(stderr, "Local Mem Size: %iB\n", sizes[0]);
+	
 
 //	CONTEXTS ARE DIFFERENT ON DIFFERENT SYSTEMS
 //	REQUIRES MORE CODE TO BE COMPATIBLE WITH MACOSX/WINDOWS

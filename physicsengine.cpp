@@ -27,6 +27,17 @@ void PhysicsEngine::Step(Object & obj) {
 	int err;
 	
 	glFinish();
+
+	cl_event events[2];
+
+	const size_t globalNum = obj.position.size();
+	size_t localNum = work_group_size;
+	if( obj.position.size() < work_group_size )
+		localNum = obj.position.size();
+	const size_t numGroups = (globalNum/localNum)+1;
+	cl_mem input5 = clCreateBuffer(context, CL_MEM_READ_WRITE, numGroups*sizeof(vec4<float>), NULL, &err);
+	if(err < 0) { perror("Couldn't create comm buffer(input5).\n"); }
+
 	if(obj.cl_vbo_mem == 0 ) { return; }
 	err = clEnqueueAcquireGLObjects(queue, 1, &obj.cl_vbo_mem, 0, NULL, NULL );
 	if(err < 0) { perror("Acquire GLObject failed."); }
@@ -44,10 +55,11 @@ void PhysicsEngine::Step(Object & obj) {
 //		err  = clSetKernelArg(kernel, 0, sizeof(float), &obj.position[i]);
 		err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input0);
 		err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &obj.cl_vbo_mem);
-		err |= clSetKernelArg(kernel, 2, 4*sizeof(float)*obj.position.size(), NULL);
+		err |= clSetKernelArg(kernel, 2, 4*sizeof(float)*localNum, NULL);
 		err |= clSetKernelArg(kernel, 3, sizeof(cl_mem), &obj.cl_vbo_mem);
 //		err |= clSetKernelArg(kernel, 4, sizeof(int), &i);
 		err |= clSetKernelArg(kernel, 4, sizeof(cl_mem), &input4);
+		err |= clSetKernelArg(kernel, 5, sizeof(cl_mem), &input5);
 
 //		err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &obj.cl_vbo_mem);
 //		err |= clSetKernelArg(kernel, 1, 4*sizeof(float)*obj.position.size(), NULL);
@@ -55,15 +67,16 @@ void PhysicsEngine::Step(Object & obj) {
 		
 		if(err != CL_SUCCESS) { perror("Error setting kernel arguments."); }
 		
-		const size_t globalNum = obj.position.size()/4;
-		const size_t localNum = globalNum;
-		
 		err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalNum, &localNum, 0, NULL, NULL);
 //		fprintf(stderr,"%i\n",err);
 		if(err != CL_SUCCESS) { perror("Error queuing kernel for execution."); exit(1); }
 	}
 	err = clEnqueueReleaseGLObjects(queue, 1, &obj.cl_vbo_mem, 0, NULL, NULL);
 	if(err < 0) { perror("Couldn't release GLObject."); }
+
+	err = clReleaseMemObject(input5);
+	if(err < 0) { perror("Couldn't release memory object.(input5)"); }
+
 	clFinish(queue);
 
 	glBindBuffer(GL_ARRAY_BUFFER, obj.getPBO());
