@@ -55,7 +55,7 @@ void PhysicsEngine::Step(Object & obj) {
 		
 		if(err != CL_SUCCESS) { perror("Error setting kernel arguments."); }
 		
-		const size_t globalNum = obj.position.size();
+		const size_t globalNum = obj.position.size()/4;
 		const size_t localNum = globalNum;
 		
 		err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalNum, &localNum, 0, NULL, NULL);
