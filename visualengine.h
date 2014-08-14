@@ -8,6 +8,7 @@
 #include "object.h"
 
 class VisualEngine : public GLEngine {
+	
 	void SetPerspective();
 
 	GLuint perspectiveMatrixUnif;
@@ -16,8 +17,12 @@ class VisualEngine : public GLEngine {
 
 	GLuint offsetLocation;
 
-	float voffset[4];
+	float scale;
+//	float voffset[4];
 public:
+	void Zoom(float);
+	float voffset[4];
+
 	VisualEngine();
 	void Init();
 

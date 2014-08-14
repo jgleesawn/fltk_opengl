@@ -12,7 +12,7 @@
 #include <vector>
 #include <stdio.h>
 
-#pragma OPENCL EXTENSION cl_khr_gl_sharing : enable
+//#pragma OPENCL EXTENSION cl_khr_gl_sharing : enable
 
 #include "shader_util.h"
 

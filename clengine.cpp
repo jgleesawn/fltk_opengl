@@ -23,6 +23,15 @@ void CLEngine::_init() {
 	clGetDeviceInfo(device, CL_DEVICE_EXTENSIONS, 500,params,&size);
 	fprintf(stderr,"%s\n",params);
 
+	size_t sizes[40];
+	clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, 40*sizeof(size_t), &sizes,&size);
+	fprintf(stderr,"Work Group Size: %i\n",sizes[0]);
+
+	clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES, 40*sizeof(size_t), &sizes, &size);
+	for( int i=0; i<size/sizeof(size_t); i++) {
+		fprintf(stderr,"Work Item Size: %i\n",sizes[i]);
+	}
+
 //	CONTEXTS ARE DIFFERENT ON DIFFERENT SYSTEMS
 //	REQUIRES MORE CODE TO BE COMPATIBLE WITH MACOSX/WINDOWS
 //	fprintf(stderr,"gl_context: %i\nglx_context: %i\n", gl_context, glXGetCurrentContext()); 

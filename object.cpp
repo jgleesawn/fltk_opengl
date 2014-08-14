@@ -3,11 +3,11 @@
 Object::Object(PhysicsEngine * pep) {
 	pe = pep;
 	vec4<float> temp = {0.0, 0.0, 0.0, 1.0};
-	position.push_back(temp);
-	for( int i=0; i<10; i++) {
+	//position.push_back(temp);
+	for( int i=0; i<500; i++) {
 		for( int j=0; j<4; j++) {
-			temp.data[j] = rand()%100;
-			temp.data[j] /= 100;
+			temp.data[j] = rand()%100 - 50;
+			temp.data[j] /= 20;
 		}
 		temp.data[0] += .1;
 		temp.data[1] += .1;

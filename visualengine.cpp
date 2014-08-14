@@ -1,5 +1,9 @@
 #include "visualengine.h"
 
+void VisualEngine::Zoom(float s) {
+	scale *= s;
+	SetPerspective();
+}
 VisualEngine::VisualEngine() {
 	voffset[0] = 0.0f;
 	voffset[1] = 0.0f;
@@ -24,16 +28,18 @@ void VisualEngine::Init() {
 	elapsedTimeUniform = glGetUniformLocation(theProgram, "time");
 	fragLoopDuration = glGetUniformLocation(theProgram, "fragLoopDuration");
 
+	scale = 1.0f;
 	SetPerspective();
 
 	glUseProgram(theProgram);
 	glUniform1f(fragLoopDuration, (GLfloat)2.5f);
 	glUseProgram(0);
 
+	voffset[2] = 30.0;
 }
 
 void VisualEngine::SetPerspective() {
-	float fFrustumScale = 50.0f; float fzNear = 0.1f; float fzFar = 5.0f;
+	float fFrustumScale = scale; float fzNear = 0.1f; float fzFar = 100000.0f;
 	
 	float theMatrix[16];
 	memset(theMatrix, 0, sizeof(float) * 16);
@@ -57,7 +63,7 @@ void VisualEngine::Draw(Object & obj) {
 	//voffset[0] += .10;
 	//voffset[1] += .10;
 	//voffset[2] += .10;
-	voffset[2] = 1.0;
+//	voffset[2] = 30.0;
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -70,7 +76,8 @@ void VisualEngine::Draw(Object & obj) {
 	glBindBuffer(GL_ARRAY_BUFFER, obj.getPBO());
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(4*4));
+//	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(4*4));
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
 	//glDrawArrays(GL_TRIANGLE_STRIP, 1, obj.position.size()-1);
 	glDrawArrays(GL_POINTS, 1, obj.position.size()-1);

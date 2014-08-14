@@ -8,7 +8,8 @@ uniform mat4 perspectiveMatrix;
 
 void main()
 {
-	vec4 cameraPos = position + vec4( uOffset.x, uOffset.y, uOffset.z, 0.0f);
+	vec4 cameraPos = vec4( uOffset.xyz, 1.0f );
+	cameraPos.xyz += position.xyz;
 	gl_Position = perspectiveMatrix * cameraPos;
 	//gl_Position = position; //cameraPos;
 }

@@ -34,10 +34,10 @@ void PhysicsEngine::Step(Object & obj) {
 	//Returns if pointer is null
 	if(obj.cl_vbo_mem == 0) { return; }
 	for( int i=0; i<obj.position.size(); i++) {
-		fprintf(stderr, "pos addr: %i\n", &obj.position[i]);
-		for( int j=0; j<4; j++)
-			fprintf(stderr, "%f ", obj.position[i].data[j]);
-		fprintf(stderr, "\n");
+//		fprintf(stderr, "pos addr: %i\n", &obj.position[i]);
+//		for( int j=0; j<4; j++)
+//			fprintf(stderr, "%f ", obj.position[i].data[j]);
+//		fprintf(stderr, "\n");
 //Added input buffers because the commented kernel args would segfault on second loop.
 		clEnqueueWriteBuffer(queue, input0, CL_FALSE, 0, sizeof(vec4<float>), &obj.position[i], 0, NULL, NULL);
 		clEnqueueWriteBuffer(queue, input4, CL_FALSE, 0, sizeof(int), &i, 0, NULL, NULL);
@@ -59,7 +59,7 @@ void PhysicsEngine::Step(Object & obj) {
 		const size_t localNum = globalNum;
 		
 		err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalNum, &localNum, 0, NULL, NULL);
-		fprintf(stderr,"%i\n",err);
+//		fprintf(stderr,"%i\n",err);
 		if(err != CL_SUCCESS) { perror("Error queuing kernel for execution."); exit(1); }
 	}
 	err = clEnqueueReleaseGLObjects(queue, 1, &obj.cl_vbo_mem, 0, NULL, NULL);

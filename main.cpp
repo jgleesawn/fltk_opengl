@@ -18,6 +18,8 @@
 #include "visualengine.h"
 #include "object.h"
 
+void Help();
+
 class MyWindow : public Fl_Gl_Window {
 	void draw();
 	int handle(int);
@@ -36,7 +38,7 @@ public:
 };
 
 MyWindow::MyWindow(int X, int Y, int W, int H, const char *L)
-		: Fl_Gl_Window(X, Y, W, H, L), basex(0), basey(0), curx(-2), cury(2), v(false) { }
+		: Fl_Gl_Window(X, Y, W, H, L), basex(0), basey(0), curx(-2), cury(2), v(false) { Help(); }
 
 //bool MyWindow::valid() {
 //	if(!v) {
@@ -97,8 +99,21 @@ int MyWindow::handle(int event) {
 			redraw();
 //			fprintf(stderr,"%i\n",Fl::event_key());
 //			fprintf(stderr,"%i %i",basex,basey);
-			if( strcmp(Fl::event_text(),"q") == 0 ) {
+//Escape Key
+			if( Fl::event_key() == 65307 )
 				exit(0);
+//Zoom-in wrt scaling
+			if( strcmp(Fl::event_text(),"z") == 0 ) {
+				ve.voffset[2] -= .1*ve.voffset[2];
+			}
+			if( strcmp(Fl::event_text(),"x") == 0 ) {
+				ve.voffset[2] += .1*ve.voffset[2];
+			}
+			if( strcmp(Fl::event_text(),"q") == 0 ) {
+				ve.Zoom(2);
+			}
+			if( strcmp(Fl::event_text(),"e") == 0 ) {
+				ve.Zoom(1.0/2.0);
 			}
 		break;
 		default:
@@ -111,4 +126,13 @@ int main(int argc, char **argv) {
 	Fl_Box *box = new Fl_Box(20,40,260,100,"Hello, World!");
 	window->show(argc, argv);
 	return Fl::run();
+}
+
+void Help() {
+	printf("Escape to quit.\n");
+	printf("q Zooms in.(Scales frustum up)\n");
+	printf("e Zooms out.(Scales frustum down)\n");
+	printf("z Increases z.\n");
+	printf("x Decreases z.\n");
+	printf("Escape to quit.\n");
 }

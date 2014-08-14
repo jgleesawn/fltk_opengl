@@ -1,4 +1,4 @@
-#pragma OPENCL EXTENSION cl_khr_gl_sharing : enable
+//#pragma OPENCL EXTENSION cl_khr_gl_sharing : enable
 
 /*
 __kernel void findForce(__global float4 * curPos, __local float4* force, __global float4* sumForce) {
@@ -18,19 +18,27 @@ __kernel void findForce(__constant float4 * curPos, __global float4* data,
 			__local float4* force, __global float4* sumForce,
 			__constant int * curInd ) {
 	float3 diff,sum;
-	float len;
-	
-	diff = data[get_global_id(0)].xyz-curPos[0].xyz;
+	float len,c1,c2;
+
+	float4 cpos = curPos[0];
+	float4 d = data[get_global_id(0)];
+
+	c1 = cpos.w;
+	c2 = d.w;
+
+	diff = d.xyz - cpos.xyz;
 	len = length(diff);
 
-	if( len < 0.8f )
-		len = 0.1f;
+	//float dist = 0.45f;
+	float dist = 0.4f;
+	if( len < dist )
+		len = dist;
 
 	len = len*len;
-	sum = diff/len;
+	sum = -c1*c2*diff/len;
 //Influence of terms changes at len = 1;
 	len = len*len;
-	sum = sum - (diff/len);
+	sum = sum + c1*c2*(diff/len);
 
 	force[get_local_id(0)] = (float4)(sum,0.0f);
 
