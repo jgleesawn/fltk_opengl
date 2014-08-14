@@ -11,9 +11,13 @@ void PhysicsEngine::Init() {
 	queue = clCreateCommandQueue(context, device, 0, &err);
 	if(err < 0) { perror("Couldn't create a command queue"); exit(1); }
 
-	kernel = clCreateKernel(program, "findForce", &err);
+	kernels.push_back(cl_kernel());
+	kernels[0] = clCreateKernel(program, "updateVelocity", &err);
 	if(err < 0) { perror("Couldn't create a kernel"); exit(1); }	
 
+	kernels.push_back(cl_kernel());
+	kernels[1] = clCreateKernel(program, "applyVelocity", &err);
+	if(err < 0) { perror("Couldn't create a kernel"); exit(1); }
 
 	input0 = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(vec4<float>), NULL, &err);
 	if(err < 0) { perror("Could not create vec4 buffer."); exit(1); }
@@ -45,6 +49,8 @@ void PhysicsEngine::Step(Object & obj) {
 
 	//Returns if pointer is null
 	if(obj.cl_vbo_mem == 0) { return; }
+	if(obj.cl_vel_mem == 0) { return; }
+	cl_kernel kernel = kernels[0];
 	for( int i=0; i<osize; i++) {
 //		fprintf(stderr, "pos addr: %i\n", &obj.position[i]);
 //		for( int j=0; j<4; j++)
@@ -57,7 +63,7 @@ void PhysicsEngine::Step(Object & obj) {
 		err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input0);
 		err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &obj.cl_vbo_mem);
 		err |= clSetKernelArg(kernel, 2, 4*sizeof(float)*localNum, NULL);
-		err |= clSetKernelArg(kernel, 3, sizeof(cl_mem), &obj.cl_vbo_mem);
+		err |= clSetKernelArg(kernel, 3, sizeof(cl_mem), &obj.cl_vel_mem);
 //		err |= clSetKernelArg(kernel, 4, sizeof(int), &i);
 		err |= clSetKernelArg(kernel, 4, sizeof(cl_mem), &input4);
 		err |= clSetKernelArg(kernel, 5, sizeof(cl_mem), &input5);
@@ -66,12 +72,22 @@ void PhysicsEngine::Step(Object & obj) {
 //		err |= clSetKernelArg(kernel, 1, 4*sizeof(float)*osize, NULL);
 //		err |= clSetKernelArg(kernel, 2, sizeof(cl_mem), &obj.cl_vbo_mem);
 		
-		if(err != CL_SUCCESS) { perror("Error setting kernel arguments."); }
+		if(err != CL_SUCCESS) { perror("Error setting kernel0 arguments."); }
 		
 		err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalNum, &localNum, 0, NULL, NULL);
 //		fprintf(stderr,"%i\n",err);
-		if(err != CL_SUCCESS) { perror("Error queuing kernel for execution."); exit(1); }
+		if(err != CL_SUCCESS) { perror("Error queuing kernel0 for execution."); exit(1); }
 	}
+
+	kernel = kernels[1];
+	err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &obj.cl_vbo_mem);
+	err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &obj.cl_vel_mem);
+	if(err != CL_SUCCESS) { perror("Error setting kernel1 arguments."); }
+
+	err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalNum, &localNum, 0, NULL, NULL);
+	if(err != CL_SUCCESS) { perror("Error queuing kernel1 for execution."); exit(1); }
+
+
 	err = clEnqueueReleaseGLObjects(queue, 1, &obj.cl_vbo_mem, 0, NULL, NULL);
 	if(err < 0) { perror("Couldn't release GLObject."); }
 

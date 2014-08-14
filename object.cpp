@@ -24,6 +24,14 @@ Object::Object(PhysicsEngine * pep,int num) {
 	cl_vbo_mem = clCreateFromGLBuffer(pe->getContext(), CL_MEM_READ_WRITE, positionBufferObject, &err);
 	fprintf(stderr,"%i\n",err);
 	if(err != CL_SUCCESS) { perror("Couldn't create CLbuffer from GLbuffer."); cl_vbo_mem = 0;}
+
+//Velocity buffer.
+	vec4<float> *buf;
+	buf = new vec4<float>[position.size()];
+	memset(buf,0,sizeof(vec4<float>)*position.size());
+	cl_vel_mem = clCreateBuffer(pe->getContext(), CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, 4*sizeof(cl_float)*position.size(), buf, &err);
+	if(err != CL_SUCCESS) { perror("Couldn't create velocity CLbuffer."); cl_vbo_mem = 0;}
+	delete buf;
 }
 
 void Object::InitializeVertexBuffer(){

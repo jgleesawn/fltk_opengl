@@ -14,13 +14,13 @@ __kernel void findForce(__global float4 * curPos, __local float4* force, __globa
 }
 */
 
-__kernel void findForce(__constant float4 * curPos, __global float4* data,
-			__local float4* force, __global float4* sumForce,
+__kernel void updateVelocity(__constant float4 * curPos, __global float4* positions,
+			__local float4* force, __global float4* velocities,
 			__constant int * curInd, __global float4* commBuff ) {
 	float3 diff,sum;
 	float len,c1,c2;
 
-	float4 cpos = data[curInd[0]];//curPos[0];
+	float4 cpos = positions[curInd[0]];//curPos[0];
 	float4 d;
 	
 	int global_id = get_global_id(0);
@@ -28,9 +28,9 @@ __kernel void findForce(__constant float4 * curPos, __global float4* data,
 	int work_id = global_id/get_local_size(0);
 
 if( global_id != curInd[0] ) {
-	d = data[global_id];
-	c1 = cpos.w/10;
-	c2 = d.w/10;
+	d = positions[global_id];
+	c1 = cpos.w;
+	c2 = d.w;
 	
 	diff = d.xyz - cpos.xyz;
 	len = length(diff);
@@ -66,9 +66,19 @@ if( global_id != curInd[0] ) {
 		for(int i=0; i<(get_global_size(0)/get_local_size(0)); i++) {
 			sum += commBuff[i].xyz;
 		}
-		//Adds force to position as movement.
-		data[curInd[0]] += (float4)(sum,0.0f);
+		//Adds force to velocity as acceleration.
+		int ci = curInd[0];
+		float mass = velocities[ci].z;
+		if( mass < 1.0 ) { mass = 1.0; }
+		velocities[ci].xyz += sum/(mass*100000);
 	}
+}
+/*
+*/
+
+__kernel void applyVelocity(__global float4* positions, __global float4* velocities) {
+	int gi = get_global_id(0);
+	positions[gi].xyz += velocities[gi].xyz;
 }
 /*
 */

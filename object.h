@@ -22,7 +22,7 @@ public:
 	Object(PhysicsEngine *,int);
 
 	std::vector<vec4<float> > position;
-	cl_mem	cl_vbo_mem;
+	cl_mem	cl_vbo_mem, cl_vel_mem;
  
 	GLuint getPBO() { return positionBufferObject; }
 };

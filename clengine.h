@@ -21,7 +21,7 @@ protected:
 	cl_device_id device;
 	cl_context context;
 	cl_program program;
-	cl_kernel kernel;
+	std::vector<cl_kernel> kernels;
 	cl_command_queue queue;
 
 	cl_uint	work_group_size;
