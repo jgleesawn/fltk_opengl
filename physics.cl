@@ -29,14 +29,14 @@ __kernel void findForce(__constant float4 * curPos, __global float4* data,
 
 if( global_id != curInd[0] ) {
 	d = data[global_id];
-	c1 = cpos.w;
-	c2 = d.w;
+	c1 = cpos.w/10;
+	c2 = d.w/10;
 	
 	diff = d.xyz - cpos.xyz;
 	len = length(diff);
 	
 	//float dist = 0.45f;
-	float dist = 0.01f;
+	float dist = 0.45f;
 	if( len < dist )
 		len = dist;
 

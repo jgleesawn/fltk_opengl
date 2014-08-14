@@ -19,7 +19,7 @@ class Object {
 
 	void InitializeVertexBuffer();
 public:
-	Object(PhysicsEngine *);
+	Object(PhysicsEngine *,int);
 
 	std::vector<vec4<float> > position;
 	cl_mem	cl_vbo_mem;

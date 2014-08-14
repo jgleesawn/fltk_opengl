@@ -1,10 +1,10 @@
 #include "object.h"
-
-Object::Object(PhysicsEngine * pep) {
+//num used to be constant at 1024
+Object::Object(PhysicsEngine * pep,int num) {
 	pe = pep;
 	vec4<float> temp = {0.0, 0.0, 0.0, 1.0};
 //	position.push_back(temp);
-	for( int i=0; i<1024; i++) {
+	for( int i=0; i<num; i++) {
 		for( int j=0; j<4; j++) {
 			temp.data[j] = rand()%100 - 50;
 			temp.data[j] /= 20;

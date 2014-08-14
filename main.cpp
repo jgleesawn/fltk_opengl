@@ -27,32 +27,29 @@ class MyWindow : public Fl_Gl_Window {
 	//bool valid();
 	bool v;
 	int basex, basey, curx, cury;
+	int numv;	//number of vertices.  Used for num passed in to avoid re-compile.
 	
 	std::vector<Object> objects;
 	VisualEngine ve;
 	PhysicsEngine pe;
 	
 public:
-	MyWindow(int X, int Y, int W, int H, const char *L);  
+//last int added for passing number of vertices in.
+	MyWindow(int X, int Y, int W, int H, const char *L, int);
 	void InitGL();
+
+	void Pstep();
+	void Vstep();
 };
 
 typedef void (*func_ptr)(void *);
 void ccallback(void *);
 
-MyWindow::MyWindow(int X, int Y, int W, int H, const char *L)
-		: Fl_Gl_Window(X, Y, W, H, L), basex(0), basey(0), curx(-2), cury(2), v(false) {
+MyWindow::MyWindow(int X, int Y, int W, int H, const char *L, int num)
+		: Fl_Gl_Window(X, Y, W, H, L), basex(0), basey(0), curx(-2), cury(2), v(false),numv(num) {
 			Help(); 
-			Fl::add_timeout(2.0, (func_ptr)ccallback, this);
-		}
-
-//bool MyWindow::valid() {
-//	if(!v) {
-//		v = true;
-//		return false;
-//	}
-//	return true;
-//}
+			Fl::add_timeout(1.0/10.0, (func_ptr)ccallback, this);
+}
 
 void MyWindow::draw() {
 	if( !valid() ) {
@@ -63,49 +60,54 @@ void MyWindow::draw() {
 			exit(1);
 		pe.Init();
 		ve.Init();
-		objects.push_back(Object(&pe)); //Requires glewInit to be run.
-
-	//	ginit();
-	//	ortho();
+		objects.push_back(Object(&pe,numv)); //Requires glewInit to be run.
 	}
-/*
-	glDrawBuffer(GL_FRONT_AND_BACK);
-	gl_color(FL_CYAN);
-	gl_rectf(basex,basey,curx,cury);
-	gl_font(FL_COURIER,12);
-	gl_draw("TEST",50,50);
-*/
-	for( std::vector<Object>::iterator it = objects.begin(); it != objects.end(); it++) {
-		pe.Step(*it);
-		ve.Draw(*it);
-	}
+	Vstep();
 
 	glDrawBuffer(GL_BACK);
 }
 
+void MyWindow::Vstep() {
+	for( std::vector<Object>::iterator it = objects.begin(); it != objects.end(); it++) {
+		ve.Draw(*it);
+	}
+}
+void MyWindow::Pstep() {
+	for( std::vector<Object>::iterator it = objects.begin(); it != objects.end(); it++) {
+		pe.Step(*it);
+	}
+}
+
 void ccallback(void * this_ptr) {
+	MyWindow * t = (MyWindow *)this_ptr;
+	t->Pstep();
+
 	((MyWindow *)this_ptr)->redraw();
 	
-	Fl::repeat_timeout(1.0/5.0, (func_ptr)ccallback, this_ptr);
+	Fl::repeat_timeout(1.0/10.0, (func_ptr)ccallback, this_ptr);
 }
 
 
 int MyWindow::handle(int event) {
+	int ekey;
+	char text[2];
 	switch(event) {
 		case FL_KEYBOARD:
-			if( Fl::event_key() == 65362 ) {
+			ekey = Fl::event_key();
+			strcpy(text,Fl::event_text());
+			if( ekey == 65362 ) {
 //				fprintf(stderr, "up");
 				basey += 1;
 			}
-			if( Fl::event_key() == 65364 ) {
+			if( ekey == 65364 ) {
 //				fprintf(stderr, "down");
 				basey -= 1;
 			}
-			if( Fl::event_key() == 65361 ) {
+			if( ekey == 65361 ) {
 //				fprintf(stderr, "left");
 				basex -= 1;
 			}
-			if( Fl::event_key() == 65363 ) {
+			if( ekey == 65363 ) {
 //				fprintf(stderr, "right");
 				basex += 1;
 			}
@@ -113,23 +115,23 @@ int MyWindow::handle(int event) {
 //			fprintf(stderr,"%i\n",Fl::event_key());
 //			fprintf(stderr,"%i %i",basex,basey);
 //Escape Key
-			if( Fl::event_key() == 65307 )
+			if( ekey == 65307 )
 				exit(0);
 //Zoom-in wrt scaling
-			if( strcmp(Fl::event_text(),"z") == 0 ) {
+			if( strcmp(text,"z") == 0 ) {
 				ve.voffset[2] -= .1*ve.voffset[2];
 				if( !ve.voffset[2] )
 					ve.voffset[2] = 0.0001;
 			}
-			if( strcmp(Fl::event_text(),"x") == 0 ) {
+			if( strcmp(text,"x") == 0 ) {
 				ve.voffset[2] += .1*ve.voffset[2];
 				if( !ve.voffset[2] )
 					ve.voffset[2] = 0.0001;
 			}
-			if( strcmp(Fl::event_text(),"q") == 0 ) {
+			if( strcmp(text,"q") == 0 ) {
 				ve.Zoom(2);
 			}
-			if( strcmp(Fl::event_text(),"e") == 0 ) {
+			if( strcmp(text,"e") == 0 ) {
 				ve.Zoom(1.0/2.0);
 			}
 		break;
@@ -139,8 +141,12 @@ int MyWindow::handle(int event) {
 }
 
 int main(int argc, char **argv) {
-	MyWindow *window = new MyWindow(20,40,300,180,"Hellow, World!");
-	Fl_Box *box = new Fl_Box(20,40,260,100,"Hello, World!");
+	int num = 1024;
+	if(argc > 1){
+		num = atoi(argv[1]);
+	}
+	MyWindow *window = new MyWindow(20,40,300,180,"Hellow, World!", num);
+//	Fl_Box *box = new Fl_Box(20,40,260,100,"Hello, World!");
 	window->show(argc, argv);
 	return Fl::run();
 }
