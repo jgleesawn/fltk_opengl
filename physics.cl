@@ -19,9 +19,11 @@ __kernel void updateVelocity(__constant float4 * curPos, __global float4* positi
 			__constant int * curInd, __global float4* commBuff ) {
 	float3 diff,sum;
 	float len,c1,c2;
+	float m1,m2;
 
 	float4 cpos = positions[curInd[0]];//curPos[0];
-	float4 d;
+	float4 cvel = velocities[curInd[0]];
+	float4 d,p;//position, momentum
 	
 	int global_id = get_global_id(0);
 	int local_id = get_local_id(0);
@@ -29,10 +31,12 @@ __kernel void updateVelocity(__constant float4 * curPos, __global float4* positi
 
 if( global_id != curInd[0] ) {
 	d = positions[global_id];
-//	c1 = cpos.w;
-	c1 = fabs(cpos.w);
-//	c2 = d.w;
-	c2 = -fabs(d.w);
+	p = velocities[global_id];
+	c1 = cpos.w;
+	c2 = d.w;
+
+	m1 = cvel.w;
+	m2 = p.w;
 
 	diff = d.xyz - cpos.xyz;
 	len = length(diff);
@@ -44,7 +48,8 @@ if( global_id != curInd[0] ) {
 		len = dist;
 
 	len = len*len;
-	sum = -c1*c2*diff/len;
+	sum  = -c1*c2* diff/len;	//Charge based.
+	sum +=  m1*m2* diff/len;	//Mass based.(gravity)
 //Influence of terms changes at len = 1;
 //	len = len*len;
 //	sum = sum + c1*c2*(diff/len);

@@ -25,7 +25,7 @@ void CLEngine::_init() {
 
 	clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, sizeof(cl_uint), &work_group_size,&size);
 	fprintf(stderr,"Work Group Size: %i\n",work_group_size);
-	//work_group_size /= 32;
+	work_group_size /= 2;
 
 	size_t sizes[40];
 	clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES, 40*sizeof(size_t), &sizes, &size);
