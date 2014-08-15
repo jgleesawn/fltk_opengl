@@ -16,6 +16,7 @@ VisualEngine::VisualEngine() {
 void VisualEngine::Init() {
 	std::vector<shaderName> shaderNames;
 	shaderNames.push_back(shaderName(GL_VERTEX_SHADER, std::string("v.perspective.shader")));
+	shaderNames.push_back(shaderName(GL_GEOMETRY_SHADER, std::string("v.geometry.shader")));
 	shaderNames.push_back(shaderName(GL_FRAGMENT_SHADER, std::string("v.fragment.shader")));
 
 	InitializeProgram(shaderNames);

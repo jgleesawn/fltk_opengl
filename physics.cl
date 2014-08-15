@@ -40,19 +40,22 @@ if( global_id != curInd[0] ) {
 
 	diff = d.xyz - cpos.xyz;
 	len = length(diff);
+	len *= 100;		//scales distance
 	
 	//float dist = 0.45f;
 	float dist = 0.45f;
-	dist = 1.0f;
+	dist = 0.1f;
 	if( len < dist )
 		len = dist;
-
+	float G = 0.00001f;	//charge/mass ratio of 10^8
 	len = len*len;
 	sum  = -c1*c2* diff/len;	//Charge based.
-	sum +=  m1*m2* diff/len;	//Mass based.(gravity)
+	sum +=  G*m1*m2* diff/len;	//Mass based.(gravity)
+
 //Influence of terms changes at len = 1;
-//	len = len*len;
-//	sum = sum + c1*c2*(diff/len);
+	len = len*len;
+//	if( c1 >= 0 && c2 >= 0 )
+//	sum += sum + c1*c2*(diff/len);
 } else {
 	sum = (float3)(0.0f, 0.0f, 0.0f);
 }
@@ -76,9 +79,9 @@ if( global_id != curInd[0] ) {
 		}
 		//Adds force to velocity as acceleration.
 		int ci = curInd[0];
-		float mass = velocities[ci].z;
-		if( mass < 1.0 ) { mass = 1.0; }
-		velocities[ci].xyz += sum/(mass*10000);
+		float mass = velocities[ci].w;
+		if( mass < 0.001 ) { mass = 0.001; }
+		velocities[ci].xyz += sum/(mass*100);//*100 is timestep.
 	}
 }
 /*
@@ -86,7 +89,12 @@ if( global_id != curInd[0] ) {
 
 __kernel void applyVelocity(__global float4* positions, __global float4* velocities) {
 	int gi = get_global_id(0);
-	positions[gi].xyz += velocities[gi].xyz;
+//	velocities[gi].xyz *= 0.5f;
+	float3 pos = positions[gi].xyz;
+	if( length(pos) < 20 ) {
+		pos += velocities[gi].xyz;
+	}
+	positions[gi].xyz = pos;
 }
 /*
 */

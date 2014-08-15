@@ -133,10 +133,12 @@ int MyWindow::handle(int event) {
 					ve.voffset[2] = 0.0001;
 			}
 			if( strcmp(text,"q") == 0 ) {
-				ve.Zoom(2);
+				ve.voffset[2] -= 1;
+//				ve.Zoom(2);
 			}
 			if( strcmp(text,"e") == 0 ) {
-				ve.Zoom(1.0/2.0);
+				ve.voffset[2] += 1;
+//				ve.Zoom(1.0/2.0);
 			}
 		break;
 		default:
