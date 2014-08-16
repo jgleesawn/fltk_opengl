@@ -8,20 +8,24 @@ Object::Object(PhysicsEngine * pep,int num) {
 
 	pe = pep;
 	vec4<float> temp = {0.0, 0.0, 0.0, 0.0};
-	position.push_back(temp);
-	buf[0].data[3] = 1000000*1;	//10^6 neutron core to see how it affects particles.	
-	for( int i=0; i<num-1; i++) {
+	//position.push_back(temp);
+	//buf[0].data[3] = 1000000*1;	//10^6 neutron core to see how it affects particles.	
+	for( int i=0; i<num; i++) {
 		for( int j=0; j<3; j++) {
 			temp.data[j] = rand()%100 - 50;
 			temp.data[j] /= 20;
 		}
 		temp.data[3] = 1*(rand()%3-1);//limit of one charge.
+//		temp.data[3] = -1;//all electrons.
 		position.push_back(temp);
 
 // charge/mass ratio = 10^5 and 5x10^7
 // usually ~10^8 and 10^11
-		if( temp.data[3] > 0 )
-			buf[i].data[3] = temp.data[3]*1.0f;
+		if( temp.data[3] > 0 ) {
+			int mult = rand()%4;
+			buf[i].data[3] = mult*1.0f;
+			position[i].data[3] *= mult;
+		}
 		else if( temp.data[3] == 0 )
 			buf[i].data[3] = 1.0f;
 		else

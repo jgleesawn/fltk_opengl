@@ -9,14 +9,6 @@ layout(line_strip, max_vertices = 4) out;
 in float charge[];
 
 void main() {
-	if( charge[0] == 0 ) {
-		gl_Position = gl_in[0].gl_Position;
-		gl_Position.y += .01;
-		EmitVertex();
-		EndPrimitive();
-		return;
-	}
-
 	gl_Position = gl_in[0].gl_Position;
 	gl_Position.x += 0.01f;
 	EmitVertex();
@@ -24,6 +16,12 @@ void main() {
 	gl_Position = gl_in[0].gl_Position;
 	gl_Position.x -= 0.01f;
 	EmitVertex();
+
+	if( charge[0] == 0 ) {
+		gl_Position = gl_in[0].gl_Position;
+		gl_Position.y += .01;
+		EmitVertex();
+	}
 
 	if( charge[0] > 0 ) {
 		EndPrimitive();
