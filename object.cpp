@@ -9,10 +9,16 @@ Object::Object(PhysicsEngine * pep,int num) {
 			temp.data[j] = rand()%100 - 50;
 			temp.data[j] /= 20;
 		}
-		temp.data[0] += .1;
-		temp.data[1] += .1;
-		temp.data[2] -= .1;
+//		temp.data[0] += .1;
+//		temp.data[1] += .1;
+//		temp.data[2] -= .1;
 //		temp.data[3] += .1;
+		if( int(temp.data[3]) == 0 ) {
+			if( rand()%2 == 0 )
+				temp.data[3] = -1;
+			else
+				temp.data[3] = 1;
+		}
 		position.push_back(temp);
 	}
 	InitializeVertexBuffer();

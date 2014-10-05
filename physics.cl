@@ -36,7 +36,7 @@ if( global_id != curInd[0] ) {
 	len = length(diff);
 	
 	//float dist = 0.45f;
-	float dist = 0.45f;
+	float dist = 0.65f;
 	if( len < dist )
 		len = dist;
 
