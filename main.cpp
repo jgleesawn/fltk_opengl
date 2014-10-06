@@ -80,7 +80,8 @@ void MyWindow::Pstep() {
 
 void ccallback(void * this_ptr) {
 	MyWindow * t = (MyWindow *)this_ptr;
-	t->Pstep();
+	//for( int i=0; i<2; i++)
+		t->Pstep();
 
 	((MyWindow *)this_ptr)->redraw();
 	
@@ -97,18 +98,22 @@ int MyWindow::handle(int event) {
 			strcpy(text,Fl::event_text());
 			if( ekey == 65362 ) {
 //				fprintf(stderr, "up");
+				ve.voffset[1] += 1;
 				basey += 1;
 			}
 			if( ekey == 65364 ) {
 //				fprintf(stderr, "down");
+				ve.voffset[1] -= 1;
 				basey -= 1;
 			}
 			if( ekey == 65361 ) {
 //				fprintf(stderr, "left");
+				ve.voffset[0] -= 1;
 				basex -= 1;
 			}
 			if( ekey == 65363 ) {
 //				fprintf(stderr, "right");
+				ve.voffset[0] += 1;
 				basex += 1;
 			}
 			redraw();
@@ -157,5 +162,6 @@ void Help() {
 	printf("e Zooms out.(Scales frustum down)\n");
 	printf("z Increases z.\n");
 	printf("x Decreases z.\n");
+	printf("ArrowKeys Pan.\n");
 	printf("Escape to quit.\n");
 }
