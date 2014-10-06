@@ -1,5 +1,6 @@
 #version 330
 
+in float charge;
 out vec4 outputColor;
 
 uniform float fragLoopDuration;
@@ -11,10 +12,16 @@ const vec4 secondColor = vec4(0.0f, 1.0f, 1.0f, 1.0f);
 
 void main()
 {
-	float currTime = mod(time, fragLoopDuration);
-	float currLerp = currTime / fragLoopDuration;
+	if ( charge < 0 )
+		outputColor = vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	if ( charge > 0 )
+		outputColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	outputColor = mix(firstColor, secondColor, currLerp);
+//	float currTime = mod(time, fragLoopDuration);
+//	float currLerp = currTime / fragLoopDuration;
+//	outputColor = mix(firstColor, secondColor, currLerp);
+
+
 //	outputColor = firstColor;
 	//outputColor[0] *= scalar;
 	//outputColor[1] *= scalar;

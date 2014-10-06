@@ -13,7 +13,7 @@ Object::Object(PhysicsEngine * pep,int num) {
 //		temp.data[1] += .1;
 //		temp.data[2] -= .1;
 //		temp.data[3] += .1;
-		if( temp.data[3] < 0 ) 
+		if( temp.data[3] <= 0 ) 
 			temp.data[3] = -1;
 		else
 			temp.data[3] = 1;
